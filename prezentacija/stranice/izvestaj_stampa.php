@@ -49,7 +49,7 @@ $status = $status ?? '';
         <?php if (!$seanse): ?>
             <p>Nema zakazanih seansi.</p>
         <?php else: ?>
-        dakle<table>
+        <table>
             <thead>
                 <tr>
                     <th>Datum</th>

@@ -14,3 +14,12 @@ sleep 1
 ss -tlnp | grep 8080
 curl -I http://127.0.0.1:8080/prijava
 curl -I http://127.0.0.1:8080/css/stil.css
+
+
+cd /workspaces/SI2_Pracenje-toka-fizikalne-terapije
+sudo service mariadb start
+pkill -f "php -S" || true
+/usr/bin/php8.4 -S 0.0.0.0:8080 -t javno javno/ruter-dev.php >/tmp/php-server.log 2>&1 &
+sleep 1
+curl -I http://127.0.0.1:8080/prijava
+curl -I http://127.0.0.1:8080/css/stil.css
