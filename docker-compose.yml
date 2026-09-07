@@ -1,0 +1,46 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      APACHE_DOCUMENT_ROOT: /var/www/html/javno
+
+  mysql:
+    image: mysql:8.0
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: kinetika
+      MYSQL_DATABASE: kinetika
+      MYSQL_USER: kinetika
+      MYSQL_PASSWORD: kinetika
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_podaci:/var/lib/mysql
+      - ./sql/shema.sql:/docker-entrypoint-initdb.d/01-shema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ukinetika", "-pkinetika"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: kinetika
+      PMA_PASSWORD: kinetika
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_podaci:
